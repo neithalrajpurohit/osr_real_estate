@@ -1,5 +1,5 @@
 import React from "react";
-import location from "../assets/location.webp";
+// import location from "../assets/location.webp";
 import GoogleMapWithMarkers from "./GoogleMap";
 
 const LocationServices = () => {

@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import product1 from "../assets/product1.png";
 import product2 from "../assets/product2.png";
@@ -6,12 +6,10 @@ import product3 from "../assets/product3.png";
 import product4 from "../assets/product4.png";
 import product5 from "../assets/product5.png";
 import { useNavigate } from "react-router-dom";
+
 export default function PropertyCards({ scrollRef }) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const navigate = useNavigate();
-
-  // const localRef = useRef(); // Always declare hooks unconditionally
-  // const sectionRef = scrollRef || localRef;
 
   useEffect(() => {
     if (!scrollRef) return;
@@ -41,7 +39,6 @@ export default function PropertyCards({ scrollRef }) {
       name: "Knowledge Park II",
       subtitle: "(Greater Noida)",
       image: product2,
-
       subtitle2: "Smart Plots. Strong Returns.",
       description:
         "A rapidly developing hub with top institutions, tech parks, and excellent connectivity, Knowledge Park 2 offers high potential for both living and investment.",
@@ -61,7 +58,6 @@ export default function PropertyCards({ scrollRef }) {
       name: "Chi 5",
       subtitle: "(Greater Noida)",
       image: product3,
-
       subtitle2: "Smart Choice for Plot Investment",
       description:
         "Sector Chi 5 offers a peaceful, well-planned environment with rising residential demand. Its metro access, strong road connectivity, and proximity to key amenities make it ideal for home buyers and investors.",
@@ -80,7 +76,6 @@ export default function PropertyCards({ scrollRef }) {
       id: 4,
       name: "Bhutani Alphathum Sector 90",
       image: product4,
-
       subtitle: "Redefining Work & Lifestyle",
       description:
         "Where Business Meets Innovation. Located in the heart of Noida's commercial corridor, Bhutani Alphathum is a next-gen business hub offering world-class office spaces, premium retail, and lifestyle experiences—all under one iconic address.",
@@ -97,7 +92,6 @@ export default function PropertyCards({ scrollRef }) {
       name: "Luxury Villas Sector 150, Noida",
       subtitle: "Your Private Escape in the Greenest Sector",
       image: product5,
-
       description:
         "Spacious 4 & 5 BHK villas with private gardens, smart home features, and modern design in a secure, green community.",
       amenities: [
@@ -113,7 +107,6 @@ export default function PropertyCards({ scrollRef }) {
   ];
 
   const handleSelect = (id) => {
-    // alert(`Property ${id} selected!`);
     navigate(`/property/${id}`);
   };
 
@@ -173,7 +166,7 @@ export default function PropertyCards({ scrollRef }) {
             {visibleProperties.map((property) => (
               <div
                 key={property.id}
-                className="w-full max-w-xs rounded-lg overflow-hidden shadow-lg bg-indigo-900 text-white transition-all duration-300"
+                className="w-full max-w-xs min-h-[650px] rounded-lg overflow-hidden shadow-lg bg-indigo-900 text-white transition-all duration-300 flex flex-col"
               >
                 <div className="w-full max-w-xs rounded-lg overflow-hidden shadow-lg bg-indigo-900 text-white transition-all duration-300">
                   <div className="h-30 overflow-hidden flex justify-center">
@@ -184,31 +177,32 @@ export default function PropertyCards({ scrollRef }) {
                     />
                   </div>
                 </div>
+                <div className="p-6 flex-1 flex flex-col">
+                  <div className="flex-1">
+                    <h2 className="text-2xl font-semibold">{property.name}</h2>
+                    <p className="text-sm text-gray-300">{property.subtitle}</p>
+                    {property.subtitle2 && (
+                      <p className="text-sm text-gray-300">
+                        {property.subtitle2}
+                      </p>
+                    )}
 
-                <div className="p-6">
-                  <h2 className="text-2xl font-semibold">{property.name}</h2>
-                  <p className="text-sm text-gray-300">{property.subtitle}</p>
-                  {property.subtitle2 && (
-                    <p className="text-sm text-gray-300">
-                      {property.subtitle2}
+                    <p className="mt-3 text-sm text-gray-300">
+                      {property.description}
                     </p>
-                  )}
 
-                  <p className="mt-3 text-sm text-gray-300">
-                    {property.description}
-                  </p>
-
-                  <div className="mt-4">
-                    <p className="font-semibold mb-2 text-sm text-gray-200">
-                      USPs
-                    </p>
-                    <ul className="space-y-1 list-disc pl-5">
-                      {property.amenities.map((amenity, index) => (
-                        <li key={index} className="text-sm text-gray-300">
-                          {amenity}
-                        </li>
-                      ))}
-                    </ul>
+                    <div className="mt-4">
+                      <p className="font-semibold mb-2 text-sm text-gray-200">
+                        USPs
+                      </p>
+                      <ul className="space-y-1 list-disc pl-5">
+                        {property.amenities.map((amenity, index) => (
+                          <li key={index} className="text-sm text-gray-300">
+                            {amenity}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
                   </div>
 
                   <button
