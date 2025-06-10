@@ -47,7 +47,6 @@ const properties = [
       "Planned infrastructure with wide roads and utilities.",
     ],
     plotsize: ["50 Gaj", "100 Gaj", "200 Gaj"],
-
     price: "25,000 / Gaj",
   },
   {
@@ -69,7 +68,6 @@ const properties = [
       "Strong demand from end-users and investors",
     ],
     plotsize: ["50 Gaj", "100 Gaj"],
-
     price: "18,000 / Gaj",
   },
   {
@@ -115,7 +113,7 @@ export default function PropertyDetails() {
   const property = properties.find((p) => p.id === parseInt(id));
 
   if (!property) {
-    return <div className="p-10">Property not found.</div>;
+    return <div className="p-4 md:p-10">Property not found.</div>;
   }
 
   return (
@@ -123,12 +121,12 @@ export default function PropertyDetails() {
       <NavBar />
 
       {/* Main Content */}
-      <div className="max-w-7xl mx-auto px-6 py-[68px]">
-        <div className="flex gap-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-16 md:py-[68px]">
+        <div className="flex flex-col md:flex-row gap-6 md:gap-8">
           {/* Left Content */}
-          <div className="flex-1">
-            <div className=" rounded-lg p-6">
-              <h1 className="text-4xl font-bold text-red-600 mb-2">
+          <div className="flex-1 order-2 md:order-1">
+            <div className="rounded-lg p-4 sm:p-6">
+              <h1 className="text-3xl md:text-4xl font-bold text-red-600 mb-2">
                 {property.name}
               </h1>
               <p className="text-red-500 text-lg mb-4">{property.subtitle}</p>
@@ -145,7 +143,7 @@ export default function PropertyDetails() {
               <h3 className="text-xl font-semibold text-indigo-900 mb-4">
                 Available Plots:
               </h3>
-              <div className="flex flex-row gap-4 mb-6">
+              <div className="flex flex-wrap gap-3 mb-6">
                 {property.plotsize.map((item) => (
                   <button
                     key={item}
@@ -164,47 +162,17 @@ export default function PropertyDetails() {
                 Select
               </button>
             </div>
-
-            {/* Key Features Section */}
-            {/* <div className="bg-white rounded-lg p-6 mt-6">
-              <h2 className="text-xl font-semibold mb-4">Key Features</h2>
-              <ul className="list-disc list-inside text-gray-700 space-y-2">
-                {property.amenities.map((point, index) => (
-                  <li key={index}>{point}</li>
-                ))}
-              </ul>
-            </div> */}
           </div>
 
-          {/* Right Content - Image Carousel */}
-          <div className="flex-1 relative">
-            <div className="">
-              {/* <button className="absolute  top-1/2 transform -translate-y-1/2 bg-white bg-opacity-80 rounded-full p-2 hover:bg-opacity-100 transition-all">
-                <ChevronLeft className="w-6 h-6 text-gray-700" />
-              </button> */}
-
-              {/* <button className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-80 rounded-full p-2 hover:bg-opacity-100 transition-all">
-                <ChevronRight className="w-6 h-6 text-gray-700" />
-              </button> */}
+          {/* Right Content - Image */}
+          <div className="flex-1 order-1 md:order-2">
+            <div className="relative">
               <img
                 src={property.image}
                 alt={property.name}
-                className="w-[600px] h-[432px]"
+                className="w-full h-64 md:h-[432px] object-cover rounded-lg"
               />
-
-              {/* Carousel Navigation */}
-
-              {/* Page Counter */}
-
-              {/* Dots Indicator */}
-              {/* <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
-                <div className="w-3 h-3 bg-white rounded-full opacity-100"></div>
-                <div className="w-3 h-3 bg-white rounded-full opacity-60"></div>
-                <div className="w-3 h-3 bg-white rounded-full opacity-60"></div>
-              </div> */}
             </div>
-
-            {/* Property Image - Small thumbnail */}
           </div>
         </div>
       </div>

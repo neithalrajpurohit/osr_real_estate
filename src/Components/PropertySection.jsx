@@ -107,6 +107,7 @@ export default function PropertyCards({ scrollRef }) {
   ];
 
   const handleSelect = (id) => {
+    // console.log(`Selected property ${id}`);
     navigate(`/property/${id}`);
   };
 
@@ -122,10 +123,33 @@ export default function PropertyCards({ scrollRef }) {
     );
   };
 
-  // Get the current visible properties (just showing 3 at a time)
+  // Track screen size for responsive cards
+  const [screenSize, setScreenSize] = useState("desktop");
+
+  useEffect(() => {
+    const updateScreenSize = () => {
+      if (window.innerWidth < 768) {
+        setScreenSize("mobile");
+      } else if (window.innerWidth < 1024) {
+        setScreenSize("tablet");
+      } else {
+        setScreenSize("desktop");
+      }
+    };
+
+    // Set initial screen size
+    updateScreenSize();
+
+    window.addEventListener("resize", updateScreenSize);
+    return () => window.removeEventListener("resize", updateScreenSize);
+  }, []);
+
+  // Get the current visible properties based on screen size
   const getVisibleProperties = () => {
+    const cardsToShow =
+      screenSize === "mobile" ? 1 : screenSize === "tablet" ? 2 : 3;
     let result = [];
-    for (let i = 0; i < 3; i++) {
+    for (let i = 0; i < cardsToShow; i++) {
       const index = (currentIndex + i) % properties.length;
       result.push(properties[index]);
     }
@@ -135,79 +159,97 @@ export default function PropertyCards({ scrollRef }) {
   const visibleProperties = getVisibleProperties();
 
   return (
-    <div id="projects" className="bg-white min-h-screen p-8 ">
-      <div className="flex items-center justify-center mb-16 w-full max-w-4xl mx-auto">
-        <div className="h-px bg-gray-300 w-1/3"></div>
-        <h1 className="text-red-600 text-4xl font-semibold mx-6 whitespace-nowrap">
+    <div id="projects" className="bg-white min-h-screen p-4 sm:p-6 lg:p-8">
+      {/* Header */}
+      <div className="flex items-center justify-center mb-8 sm:mb-12 lg:mb-16 w-full max-w-4xl mx-auto">
+        <div className="h-px bg-gray-300 flex-1"></div>
+        <h1 className="text-red-600 text-2xl sm:text-3xl lg:text-4xl font-semibold mx-3 sm:mx-4 lg:mx-6 whitespace-nowrap">
           Our Projects
         </h1>
-        <div className="h-px bg-gray-300 w-1/3"></div>
+        <div className="h-px bg-gray-300 flex-1"></div>
       </div>
 
-      <div className="relative max-w-6xl mx-auto top-10">
-        {/* Navigation Arrows */}
+      <div className="relative max-w-7xl mx-auto">
+        {/* Navigation Arrows - Hidden on mobile */}
         <button
-          className="absolute -left-16 top-1/2 -translate-y-1/2 z-10 text-gray-400 w-12 h-12 flex items-center justify-center rounded-full"
+          className="absolute -left-8 lg:-left-16 top-1/2 -translate-y-1/2 z-10 text-gray-400 w-8 h-8 lg:w-12 lg:h-12 flex items-center justify-center rounded-full hover:bg-gray-100 transition-colors hidden sm:flex"
           onClick={prevSlide}
         >
-          <ChevronLeft size={36} className="text-gray-500" />
+          <ChevronLeft size={24} className="lg:w-9 lg:h-9 text-gray-500" />
         </button>
 
         <button
-          className="absolute -right-16 top-1/2 -translate-y-1/2 z-10 text-gray-400 w-12 h-12 flex items-center justify-center rounded-full"
+          className="absolute -right-8 lg:-right-16 top-1/2 -translate-y-1/2 z-10 text-gray-400 w-8 h-8 lg:w-12 lg:h-12 flex items-center justify-center rounded-full hover:bg-gray-100 transition-colors hidden sm:flex"
           onClick={nextSlide}
         >
-          <ChevronRight size={36} className="text-gray-500" />
+          <ChevronRight size={24} className="lg:w-9 lg:h-9 text-gray-500" />
         </button>
 
         {/* Property Cards Container */}
-        <div className="overflow-hidden">
-          <div className="flex justify-center gap-6">
+        <div className="overflow-hidden pt-8 sm:pt-12 lg:pt-16">
+          <div className="flex justify-center gap-3 sm:gap-4 lg:gap-6">
             {visibleProperties.map((property) => (
               <div
                 key={property.id}
-                className="w-full max-w-xs min-h-[650px] rounded-lg overflow-hidden shadow-lg bg-indigo-900 text-white transition-all duration-300 flex flex-col"
+                className="w-full max-w-xs sm:max-w-sm lg:max-w-xs min-h-[500px] sm:min-h-[600px] lg:min-h-[650px] rounded-lg overflow-visible shadow-lg bg-indigo-900 text-white transition-all duration-300 flex flex-col relative pt-20 sm:pt-24 lg:pt-28"
               >
-                <div className="w-full max-w-xs rounded-lg overflow-hidden shadow-lg bg-indigo-900 text-white transition-all duration-300">
-                  <div className="h-30 overflow-hidden flex justify-center">
+                {/* Image Container - Half outside, half inside */}
+                <div className="absolute -top-8 sm:-top-12 lg:-top-16 left-1/2 transform -translate-x-1/2 z-10">
+                  <div className="w-[200px] sm:w-[240px] lg:w-[260px] h-[120px] sm:h-[140px] lg:h-[160px] overflow-hidden rounded-2xl shadow-lg">
                     <img
                       src={property.image}
                       alt={property.name}
-                      className="w-[260px] h-[160px] object-cover absolute -top-[50px] rounded-2xl"
+                      className="w-full h-full object-cover"
                     />
                   </div>
                 </div>
-                <div className="p-6 flex-1 flex flex-col">
+
+                {/* Content Container */}
+                <div className="p-4 sm:p-5 lg:p-6 flex-1 flex flex-col">
                   <div className="flex-1">
-                    <h2 className="text-2xl font-semibold">{property.name}</h2>
-                    <p className="text-sm text-gray-300">{property.subtitle}</p>
+                    <h2 className="text-lg sm:text-xl lg:text-2xl font-semibold leading-tight">
+                      {property.name}
+                    </h2>
+                    <p className="text-xs sm:text-sm text-gray-300 mt-1">
+                      {property.subtitle}
+                    </p>
                     {property.subtitle2 && (
-                      <p className="text-sm text-gray-300">
+                      <p className="text-xs sm:text-sm text-gray-300">
                         {property.subtitle2}
                       </p>
                     )}
 
-                    <p className="mt-3 text-sm text-gray-300">
+                    <p className="mt-2 sm:mt-3 text-xs sm:text-sm text-gray-300 leading-relaxed">
                       {property.description}
                     </p>
 
-                    <div className="mt-4">
-                      <p className="font-semibold mb-2 text-sm text-gray-200">
+                    <div className="mt-3 sm:mt-4">
+                      <p className="font-semibold mb-2 text-xs sm:text-sm text-gray-200">
                         USPs
                       </p>
-                      <ul className="space-y-1 list-disc pl-5">
-                        {property.amenities.map((amenity, index) => (
-                          <li key={index} className="text-sm text-gray-300">
-                            {amenity}
+                      <ul className="space-y-1 list-disc pl-4 sm:pl-5">
+                        {property.amenities
+                          .slice(0, 6)
+                          .map((amenity, index) => (
+                            <li
+                              key={index}
+                              className="text-xs sm:text-sm text-gray-300 leading-tight"
+                            >
+                              {amenity}
+                            </li>
+                          ))}
+                        {property.amenities.length > 6 && (
+                          <li className="text-xs sm:text-sm text-gray-400 italic">
+                            +{property.amenities.length - 6} more features...
                           </li>
-                        ))}
+                        )}
                       </ul>
                     </div>
                   </div>
 
                   <button
                     onClick={() => handleSelect(property.id)}
-                    className="mt-6 w-full bg-white text-red-600 py-2 px-4 rounded-md text-center font-medium hover:bg-gray-100 transition-colors"
+                    className="mt-4 sm:mt-6 w-full bg-white text-red-600 py-2 sm:py-2.5 px-4 rounded-md text-center text-sm sm:text-base font-medium hover:bg-gray-100 transition-colors"
                   >
                     Select
                   </button>
@@ -215,6 +257,37 @@ export default function PropertyCards({ scrollRef }) {
               </div>
             ))}
           </div>
+        </div>
+
+        {/* Mobile Navigation Dots */}
+        <div className="flex justify-center mt-6 sm:hidden">
+          <div className="flex space-x-2">
+            {properties.map((_, index) => (
+              <button
+                key={index}
+                className={`w-2 h-2 rounded-full transition-colors ${
+                  index === currentIndex ? "bg-red-600" : "bg-gray-300"
+                }`}
+                onClick={() => setCurrentIndex(index)}
+              />
+            ))}
+          </div>
+        </div>
+
+        {/* Mobile Navigation Buttons */}
+        <div className="flex justify-center mt-4 space-x-4 sm:hidden">
+          <button
+            onClick={prevSlide}
+            className="flex items-center justify-center w-10 h-10 bg-gray-100 rounded-full text-gray-600 hover:bg-gray-200 transition-colors"
+          >
+            <ChevronLeft size={20} />
+          </button>
+          <button
+            onClick={nextSlide}
+            className="flex items-center justify-center w-10 h-10 bg-gray-100 rounded-full text-gray-600 hover:bg-gray-200 transition-colors"
+          >
+            <ChevronRight size={20} />
+          </button>
         </div>
       </div>
     </div>
